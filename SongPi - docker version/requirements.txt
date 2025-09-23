@@ -1,0 +1,6 @@
+flask
+flask-socketio
+shazamio
+pyaudio
+requests
+pillow

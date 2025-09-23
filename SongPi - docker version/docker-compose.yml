@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  songpi-web:
+    image: ghcr.io/juaneloti/songpi-web:latest
+    container_name: songpi-web
+    ports:
+      - "5080:5000"
+    restart: unless-stopped
+    # Uncomment the following lines if running on Linux and want audio input
+    # devices:
+    #   - "/dev/snd:/dev/snd"
+    # environment:
+    #   - SOME_ENV_VAR=value
+    # volumes:
+    #   - ./config.json:/app/config.json:ro
+    #   - ./cover_cache:/app/cover_cache

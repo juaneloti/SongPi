@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SongPi Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <style>
+        body { background: #222; color: #fff; }
+        .cover-art { max-width: 300px; border-radius: 10px; box-shadow: 0 0 20px #000; }
+        .song-info { margin-top: 2rem; }
+        .history-art { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; }
+        .history-list { margin-top: 2rem; }
+    </style>
+</head>
+<body>
+<section class="section">
+    <div class="container has-text-centered">
+        <h1 class="title">SongPi Web</h1>
+        <div id="current-song">
+            <img id="cover-art" class="cover-art" src="" alt="Cover Art" style="display:none;">
+            <div class="song-info">
+                <h2 id="song-title" class="subtitle"></h2>
+                <h3 id="song-artist"></h3>
+            </div>
+        </div>
+        <div class="history-list">
+            <h2 class="subtitle">History</h2>
+            <div id="history"></div>
+        </div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+    function updateSong(song) {
+        if (song) {
+            document.getElementById('song-title').textContent = song.title;
+            document.getElementById('song-artist').textContent = song.artist;
+            if (song.cover_path) {
+                document.getElementById('cover-art').src = song.cover_path;
+                document.getElementById('cover-art').style.display = '';
+            } else {
+                document.getElementById('cover-art').style.display = 'none';
+            }
+        }
+    }
+    function updateHistory(history) {
+        const el = document.getElementById('history');
+        el.innerHTML = '';
+        history.forEach(song => {
+            const div = document.createElement('div');
+            div.className = 'box is-flex is-align-items-center';
+            if (song.cover_path) {
+                const img = document.createElement('img');
+                img.src = song.cover_path;
+                img.className = 'history-art';
+                div.appendChild(img);
+            }
+            const info = document.createElement('span');
+            info.textContent = ` ${song.title} - ${song.artist}`;
+            div.appendChild(info);
+            el.appendChild(div);
+        });
+    }
+    fetch('/api/current').then(r => r.json()).then(updateSong);
+    fetch('/api/history').then(r => r.json()).then(updateHistory);
+    const socket = io();
+    socket.on('song_update', function(song) {
+        updateSong(song);
+        fetch('/api/history').then(r => r.json()).then(updateHistory);
+    });
+</script>
+</body>
+</html>

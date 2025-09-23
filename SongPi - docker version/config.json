@@ -1,0 +1,9 @@
+{
+    "record_seconds": 5,
+    "sample_rate": 44100,
+    "channels": 1,
+    "chunk_size": 1024,
+    "device_index": null,
+    "interval": 10,
+    "history_max": 10
+}
