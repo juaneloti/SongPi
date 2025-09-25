@@ -55,7 +55,7 @@ def record_audio(filename, duration=5, rate=44100, channels=1, chunk=1024, devic
 
 async def recognize_song(audio_path):
     shazam = Shazam()
-    out = await shazam.recognize_song(audio_path)
+    out = await shazam.recognize(audio_path)
     return out
 
 # Song state
