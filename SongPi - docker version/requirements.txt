@@ -4,3 +4,5 @@ shazamio
 pyaudio
 requests
 pillow
+gunicorn
+eventlet

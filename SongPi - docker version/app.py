@@ -37,7 +37,11 @@ def record_audio(filename, duration=5, rate=44100, channels=1, chunk=1024, devic
                     input_device_index=device_index)
     frames = []
     for _ in range(0, int(rate / chunk * duration)):
-        data = stream.read(chunk)
+        try:
+            data = stream.read(chunk, exception_on_overflow=False)
+        except IOError as e:
+            print(f"[Audio Warning] Input overflowed: {e}")
+            data = b'\x00' * chunk * 2  # silence
         frames.append(data)
     stream.stop_stream()
     stream.close()
@@ -123,6 +127,9 @@ def api_current():
 def api_history():
     return jsonify(data['history'])
 
+
+# Start recognition thread on import (so it works with Gunicorn)
+threading.Thread(target=recognition_loop, daemon=True).start()
+
 if __name__ == '__main__':
-    threading.Thread(target=recognition_loop, daemon=True).start()
     socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)

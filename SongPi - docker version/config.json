@@ -3,7 +3,7 @@
     "sample_rate": 44100,
     "channels": 1,
     "chunk_size": 1024,
-    "device_index": null,
+    "device_index": null, #change this to your microphone index. 
     "interval": 10,
     "history_max": 10
 }

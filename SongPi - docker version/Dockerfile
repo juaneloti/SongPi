@@ -36,5 +36,5 @@ COPY . /app/
 # Expose the web port
 EXPOSE 5000
 
-# Run the app
-CMD ["python", "app.py"]
+# Run the app with Gunicorn and eventlet for production
+CMD ["gunicorn", "-k", "eventlet", "-b", "0.0.0.0:5000", "app:app"]
